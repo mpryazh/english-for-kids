@@ -1,0 +1,106 @@
+.card {
+  min-width: 150px;
+  max-width: 280px;
+}
+
+img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-top-left-radius: var(--bs-card-border-radius);
+  border-top-right-radius: var(--bs-card-border-radius);
+}
+
+main {
+    margin-top: 30px;
+}
+
+.knobs,
+.layer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.button {
+  position: relative;
+  top: 50%;
+  width: 120px;
+  height: 40px;
+  overflow: hidden;
+}
+
+.button.r,
+.button.r .layer {
+  border-radius: 130px;
+}
+
+.checkbox {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 3;
+}
+
+.knobs {
+  z-index: 2;
+}
+
+.layer {
+  width: 100%;
+  background-color: var(--bs-gray-100);
+  border: 1px solid var(--bs-gray-400);
+  transition: 0.3s ease all;
+  z-index: 1;
+}
+
+.layer::after {
+  content: "Train";
+  font-size: large;
+  position: absolute;
+  top: 6px;
+  right: 20px;
+}
+
+#play-train-btn .knobs:before {
+  content: "";
+  position: absolute;
+  top: 5px;
+  left: 4px;
+  width: 30px;
+  height: 30px;
+  padding: 9px 4px;
+  background-color: var(--bs-green);
+  border-radius: 50%;
+  transition: 0.3s cubic-bezier(0.18, 0.89, 0.35, 1.15) all;
+}
+
+#play-train-btn .checkbox:checked + .knobs:before {
+  content: "";
+  left: 86px;
+  background-color: var(--bs-blue);
+}
+
+#play-train-btn .checkbox:checked ~ .layer {
+  background-color: var(--bs-gray-100);
+}
+#play-train-btn .checkbox:checked ~ .layer::after {
+  content: "Play";
+  left: -14px;
+}
+
+#play-train-btn .knobs,
+#play-train-btn .knobs:before,
+#play-train-btn .layer {
+  transition: 0.3s ease all;
+}
+
+#nav-stats {
+  font-weight: 600;
+}
