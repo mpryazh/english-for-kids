@@ -12,7 +12,7 @@ img {
 }
 
 main {
-    margin-top: 30px;
+  margin-top: 30px;
 }
 
 .knobs,
@@ -101,6 +101,25 @@ main {
   transition: 0.3s ease all;
 }
 
+.nav-item {
+  cursor: pointer;
+}
 #nav-stats {
   font-weight: 600;
+}
+
+.hidden {
+  display: none !important;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100vw;
+  padding: 20px;
+  background-color: antiquewhite;
+}
+
+.category-view.play-mode {
+  margin-bottom: 80px;
 }

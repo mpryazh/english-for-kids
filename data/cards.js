@@ -10,16 +10,6 @@ const cards = [
     "Weather"
   ],
   [
-    "img/dance.jpg",
-    "img/play.jpg",
-    "img/horse.jpg",
-    "img/frog.jpg",
-    "img/dress.jpg",
-    "img/scared.jpg",
-    "img/apple.jpg",
-    "img/cloud.jpg",
-  ],
-  [
     {
       word: "cry",
       translation: "плакать",

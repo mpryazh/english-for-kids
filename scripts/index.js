@@ -1,35 +1,29 @@
-import cards from "../data/cards.js"
+import { addModeSwitchBtn, switchModes } from "./triggers.js";
+import { CategoryCard } from "./CategoryCard.js";
 
-const cardsDiv = document.querySelectorAll(".card");
+const state = {
+  insideCategory: false,
+  playMode: false,
+};
 
-class CategoryCard {
-    constructor(id) {
-        this.id = id;
-        this.category = cards[0][id];
-        this.card = cardsDiv[id];
-        this.img = "../data/"+cards[1][id]
-    }
+CategoryCard.createCards();
+addModeSwitchBtn();
 
-    fillInfo() {
-        this.card.querySelector(".card-title").textContent = this.category;
-        this.card.querySelector("img").setAttribute("alt", this.category);
-        this.card.querySelector("img").setAttribute("src", this.img);
-    }
-
-
+function addHomeLink() {
+  const link = document.querySelector(".nav-item.home");
+  link.addEventListener("click", () => {
+    CategoryCard.createCards();
+    hideMenu();
+    switchModes();
+  });
 }
 
-for(let i=0; i<cardsDiv.length; i++) {
-    const card = new CategoryCard(i);
-    card.fillInfo();
+function hideMenu() {
+  document.querySelector(".offcanvas-start").classList.remove("show");
+  document.querySelector(".offcanvas-backdrop").classList.remove("show");
+  document.body.style = "";
 }
 
-function fillMenu() {
-    const navItems = document.querySelectorAll(".nav-item");
-    const length = cards[0].length;
-    for (let i=0; i<length; i++) {
-        navItems[i].textContent = cards[0][i]
-    }
-}
+addHomeLink();
 
-fillMenu();
+export { state };
