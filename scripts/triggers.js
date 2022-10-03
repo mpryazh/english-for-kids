@@ -18,20 +18,20 @@ function addModeSwitchBtn() {
 }
 
 function switchModes() {
-  const footer = document.querySelector("footer");
   const view = document.querySelector("#view");
-  if (state.playMode && state.insideCategory) {
-    footer.classList.remove("hidden");
+  if (state.insideCategory) {
+    view.classList.add("category-view");
+    view.classList.remove("main-view");
+  }
+  if (!state.insideCategory) {
+    view.classList.remove("category-view");
+    view.classList.add("main-view");
   }
   if (state.playMode) {
     view.classList.add("play-mode");
   }
-  if (!state.insideCategory) {
-    footer.classList.add("hidden");
-  }
   if (!state.playMode) {
     view.classList.remove("play-mode");
-    footer.classList.add("hidden");
   }
 }
 
