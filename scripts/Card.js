@@ -12,13 +12,6 @@ class Card extends CardParent {
     this.flipped = false;
   }
 
-  static createCards(cat_id) {
-    const cardsDiv = document.querySelectorAll(".card");
-    for (let i = 0; i < cardsDiv.length; i++) {
-      new Card(cat_id, i);
-    }
-  }
-
   fillInfo() {
     const title = this.card.querySelector(".card-title");
     title.textContent = this.obj.word;
@@ -43,19 +36,10 @@ class Card extends CardParent {
   }
 
   flipCardBack(title) {
-    if (!this.flipped) {
-      return;
-    }
+    if (!this.flipped) return;
     title.textContent = this.obj.word;
     this.flipped = false;
     this.card.classList.remove("flipped");
-  }
-
-  playAudio() {
-    if (this.flipped) {
-      return;
-    }
-    this.card.querySelector("audio").play();
   }
 }
 

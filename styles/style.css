@@ -152,3 +152,18 @@ footer {
 .play-mode.category-view .card-title {
   display: none;
 }
+
+.game-on  .repeat-button {
+  display: inline-block !important;
+}
+
+.game-on  .start-button {
+  display: none !important;
+}
+
+.repeat-button {
+  display: none;
+}
+
+
+
