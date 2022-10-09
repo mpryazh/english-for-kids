@@ -32,9 +32,9 @@ function switchModes() {
     view.classList.remove("play-mode");
   }
   if (state.gameOn && !state.playMode) {
-    console.log("need to stop the game");
     stopGame();
   }
+  console.log(state);
 }
 
 function stopGame() {
@@ -83,8 +83,8 @@ async function askWord(id) {
   } catch (err) {
     if (err.message === "menu") {
       document
-      .querySelector(".start-button")
-      .removeEventListener("click", this.startGame);
+        .querySelector(".start-button")
+        .removeEventListener("click", this.startGame);
     }
     repeatBtn.removeEventListener("click", playSoundBinded);
     removeGameEventListeners();

@@ -1,31 +1,45 @@
 import { addModeSwitchBtn, switchModes } from "./triggers.js";
-import { CategoryCard } from "./CategoryCard.js";
+import { Category } from "./Category.js";
 import cards from "../data/cards.js";
 
 const state = {
   insideCategory: false,
   playMode: false,
-  gameOn: false
+  gameOn: false,
 };
 
-CategoryCard.createCategoryCards();
+Category.createCategoryCards();
 addModeSwitchBtn();
-addNavLinks()
+addNavLinks();
 
 function addNavLinks() {
   const links = document.querySelectorAll(".nav-item.category");
-  console.log(links[0])
-  for (let i=0; i<8; i++) {
+
+  for (let i = 0; i < 8; i++) {
     links[i].textContent = cards[0][i];
-    links[i].addEventListener("click", (i) => CategoryCard.createCards(i));
-    // why it doesnt work(((((
+    links[i].addEventListener("click", () => {
+      const category = new Category(i);
+      category.createCards(i);
+      hideMenu();
+      openCategory();
+    });
   }
+}
+
+function openCategory() {
+  state.insideCategory = true;
+
+  const view = document.querySelector("#view");
+  view.classList.add("category-view");
+  view.classList.remove("main-view");
+
+  switchModes();
 }
 
 function addHomeLink() {
   const link = document.querySelector(".nav-item.home");
   link.addEventListener("click", () => {
-    CategoryCard.createCategoryCards();
+    Category.createCategoryCards();
     hideMenu();
     switchModes();
   });
