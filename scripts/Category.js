@@ -29,9 +29,13 @@ class Category extends CardParent {
       const card = new Card(cat_id, i);
       this.cards.push(card);
     }
-    document
-      .querySelector(".start-button")
-      .addEventListener("click", this.startGame);
+    document.querySelector(".start-button").remove();
+
+    const startBtn = document.createElement("button");
+    startBtn.classList.add("button","start-button");
+    startBtn.textContent = "Start";
+    startBtn.addEventListener("click", this.startGame);
+    document.querySelector("footer").append(startBtn);
   }
 
   addNavigation() {

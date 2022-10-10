@@ -34,7 +34,6 @@ function switchModes() {
   if (state.gameOn && !state.playMode) {
     stopGame();
   }
-  console.log(state);
 }
 
 function stopGame() {
