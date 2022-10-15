@@ -165,5 +165,13 @@ footer {
   display: none;
 }
 
+.hidden {
+  display: none !important;
+}
+
+#statistics {
+  display: block;
+}
+
 
 

@@ -1,4 +1,3 @@
-import { state } from "./index.js";
 import { removeGameEventListeners } from "./triggers.js";
 
 class CardParent {
@@ -7,12 +6,6 @@ class CardParent {
     const cardsDiv = document.querySelectorAll(".card");
     this.card = cardsDiv[id];
     removeGameEventListeners();
-  }
-  playAudio() {
-    if (this.flipped || state.playMode) {
-      return;
-    }
-    this.card.querySelector("audio").play();
   }
 }
 

@@ -169,12 +169,31 @@
       </div>
     </main>
 
+    <div id="statistics" class="hidden">
+      <div>
+        <button id="repeat-btn" class="button">Repeat difficult words (0-8 words)</button>
+        <button id="reset-btn" class="button">Reset</button>
+      </div>
+      <table id="stats-table" class="table table-hover">
+        <tbody>
+        <tr>
+          <th>Word</th>
+          <th>Category</th>
+          <th>Translation</th>
+          <th>Clicks in train</th>
+          <th>Correct answers</th>
+          <th>Wrong answers</th>
+          <th>Correct answers %</th>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
     <footer class="footer">
       <button class="button start-button">Start</button>
       <button class="button repeat-button">Repeat</button>
     </footer>
 
-    <!-- <script src="./bundle.js"></script> -->
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"

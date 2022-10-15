@@ -15,10 +15,6 @@ function addModeSwitchBtn() {
   }
 }
 
-/*
-webpack, eslint, eslint-config-airbnb-base and babel are used +10
-*/
-
 function switchModes() {
   const view = document.querySelector("#view");
   if (state.insideCategory) {
@@ -37,6 +33,9 @@ function switchModes() {
   }
   if (state.gameOn && !state.playMode) {
     stopGame();
+  }
+  if (state.insideStats) {
+    view.classList.remove("category-view");
   }
 }
 

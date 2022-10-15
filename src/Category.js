@@ -1,7 +1,7 @@
 import cards from "./data/cards.js";
 import { Card } from "./Card.js";
 import CardParent from "./CardParent.js";
-import { state } from "./index.js";
+import { categories, state } from "./index.js";
 import { switchModes, startGame } from "./triggers.js";
 
 class Category extends CardParent {
@@ -11,6 +11,7 @@ class Category extends CardParent {
     this.img = "../data/" + cards[id + 1][0].image;
     this.cards = [];
     this.fillInfo();
+    this.createCards(id)
     this.addNavigation();
     state.insideCategory = false;
     this.startGame = startGame.bind(this);
@@ -19,7 +20,8 @@ class Category extends CardParent {
   static createCategoryCards() {
     const cardsDiv = document.querySelectorAll(".card");
     for (let i = 0; i < cardsDiv.length; i++) {
-      new Category(i);
+      const category = new Category(i);
+      categories.push(category);
     }
   }
 
@@ -29,10 +31,14 @@ class Category extends CardParent {
       const card = new Card(cat_id, i);
       this.cards.push(card);
     }
+    // this.addStartBtn();
+  }
+
+  addStartBtn() {
     document.querySelector(".start-button").remove();
 
     const startBtn = document.createElement("button");
-    startBtn.classList.add("button","start-button");
+    startBtn.classList.add("button", "start-button");
     startBtn.textContent = "Start";
     startBtn.addEventListener("click", this.startGame);
     document.querySelector("footer").append(startBtn);
@@ -52,7 +58,12 @@ class Category extends CardParent {
     if (target.closest(".card") && state.insideCategory) return;
 
     state.insideCategory = true;
-    this.createCards(this.id);
+    // this.createCards(this.id);
+    this.addStartBtn();
+    // надо отсюда заполнять инфо в карточках
+    for(const card of this.cards) {
+      card.fillInfo();
+    }
 
     const view = document.querySelector("#view");
     view.classList.add("category-view");
