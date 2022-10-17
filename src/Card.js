@@ -1,10 +1,10 @@
 import cards from "./data/cards.js";
-import CardParent from "./CardParent.js";
 import { state } from "./index.js";
+import { calculatePercent, incrementClicks } from "./statistics";
 
-class Card extends CardParent {
+class Card {
   constructor(cat_id, id) {
-    super(id);
+    this.id = id;
     this.category_id = cat_id;
     this.key = cat_id + "_" + id;
     this.category = cards[0][cat_id];
@@ -24,8 +24,12 @@ class Card extends CardParent {
     this.card
       .querySelector(".flip-button")
       .addEventListener("click", (e) => this.flipCard(e, title));
+
     this.card.addEventListener("mouseleave", () => this.flipCardBack(title));
-    this.card.addEventListener("click", () => this.playAudio());
+    this.card.addEventListener("click", () => {
+      this.playAudio();
+      incrementClicks(this);
+    });
   }
 
   flipCard(e, title) {
@@ -49,14 +53,8 @@ class Card extends CardParent {
       return;
     }
     this.card.querySelector("audio").play();
-    this.incrementStats("clicked");
   }
 
-  incrementStats(param) {
-    const stats = JSON.parse(localStorage.getItem(this.key));
-    stats[param]++;
-    localStorage.setItem(this.key, JSON.stringify(stats));
-  }
 }
 
 export { Card };

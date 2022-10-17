@@ -173,5 +173,15 @@ footer {
   display: block;
 }
 
+#repeat-diff-btn {
+  width: fit-content;
+  white-space: nowrap;
+}
 
+.card {
+  height: 220px !important;
+}
 
+.category-view.play-mode .card-img {
+  height: 220px;
+}

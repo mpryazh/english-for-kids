@@ -1,37 +1,65 @@
 import cards from "./data/cards.js";
 import { Card } from "./Card.js";
-import CardParent from "./CardParent.js";
-import { categories, state } from "./index.js";
-import { switchModes, startGame } from "./triggers.js";
+import { categories, state, cardColTemplate } from "./index.js";
+import { startGame } from "./game.js";
+import { switchModes } from "./play_train_modes";
 
-class Category extends CardParent {
+class Category {
   constructor(id) {
-    super(id);
+    this.id = id;
     this.category = cards[0][id];
     this.img = "../data/" + cards[id + 1][0].image;
-    this.cards = [];
-    this.fillInfo();
-    this.createCards(id)
-    this.addNavigation();
-    state.insideCategory = false;
+    this.createCards(id);
     this.startGame = startGame.bind(this);
   }
 
+  static showCategories() {
+    for (const category of categories) {
+      state.insideCategory = false;
+      category.fillInfo();
+      category.addNavigation();
+    }
+  }
+
   static createCategoryCards() {
-    const cardsDiv = document.querySelectorAll(".card");
-    for (let i = 0; i < cardsDiv.length; i++) {
+    for (let i = 0; i < 8; i++) {
       const category = new Category(i);
       categories.push(category);
+    }
+
+    Category.reInsertCategoryCards();
+  }
+
+  static reInsertCategoryCards() {
+    const row = document.querySelector("#view .row");
+    row.textContent = "";
+
+    for (const category of categories) {
+      const cardCol = cardColTemplate.cloneNode(true);
+      row.append(cardCol);
+      category.card = cardCol.querySelector(".card");
+    }
+  }
+
+  reInsertCards() {
+    const row = document.querySelector("#view .row");
+    row.textContent = "";
+
+    for (const card of this.cards) {
+      const cardCol = cardColTemplate.cloneNode(true);
+      row.append(cardCol);
+      card.card = cardCol.querySelector(".card");
+      card.fillInfo();
     }
   }
 
   createCards(cat_id) {
-    const cardsDiv = document.querySelectorAll(".card");
-    for (let i = 0; i < cardsDiv.length; i++) {
+    this.cards = [];
+
+    for (let i = 0; i < 8; i++) {
       const card = new Card(cat_id, i);
       this.cards.push(card);
     }
-    // this.addStartBtn();
   }
 
   addStartBtn() {
@@ -54,17 +82,11 @@ class Category extends CardParent {
     this.card.querySelector("img").setAttribute("src", this.img);
   }
 
-  toCategoryView(target) {
-    if (target.closest(".card") && state.insideCategory) return;
+  toCategoryView() {
+    this.reInsertCards();
+    this.addStartBtn();
 
     state.insideCategory = true;
-    // this.createCards(this.id);
-    this.addStartBtn();
-    // надо отсюда заполнять инфо в карточках
-    for(const card of this.cards) {
-      card.fillInfo();
-    }
-
     const view = document.querySelector("#view");
     view.classList.add("category-view");
     view.classList.remove("main-view");

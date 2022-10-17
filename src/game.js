@@ -1,64 +1,24 @@
-import { state } from "./index.js";
-
-function addModeSwitchBtn() {
-  let switchBtn = document.querySelector("#play-train-btn .checkbox");
-  switchBtn.addEventListener("click", toggle);
-
-  function toggle() {
-    if (switchBtn.checked) {
-      state.playMode = true;
-      switchModes();
-    } else {
-      state.playMode = false;
-      switchModes();
-    }
-  }
-}
-
-function switchModes() {
-  const view = document.querySelector("#view");
-  if (state.insideCategory) {
-    view.classList.add("category-view");
-    view.classList.remove("main-view");
-  }
-  if (!state.insideCategory) {
-    view.classList.remove("category-view");
-    view.classList.add("main-view");
-  }
-  if (state.playMode) {
-    view.classList.add("play-mode");
-  }
-  if (!state.playMode) {
-    view.classList.remove("play-mode");
-  }
-  if (state.gameOn && !state.playMode) {
-    stopGame();
-  }
-  if (state.insideStats) {
-    view.classList.remove("category-view");
-  }
-}
-
-function stopGame() {
-  document.querySelector("footer").classList.remove("game-on");
-  removeGameEventListeners();
-  state.gameOn = false;
-}
+import { state, gameState } from "./index.js";
+import {
+  calculatePercent,
+  incrementMistakes,
+  incrementGuessed
+} from "./statistics.js";
 
 async function startGame() {
   console.log("start game");
 
   document.querySelector("footer").classList.add("game-on");
   state.gameOn = true;
+  gameState.category = this;
 
   const indexes = [...Array(8).keys()];
   shuffle(indexes);
 
-  const askWordBinded = askWord.bind(this);
-
   try {
     for (const id of indexes) {
-      await askWordBinded(id);
+      gameState.wordId = id;
+      await askWord(this, id);
     }
   } catch (err) {
     stopGame();
@@ -69,24 +29,27 @@ async function startGame() {
   document.querySelector("footer").classList.remove("game-on");
 }
 
-async function askWord(id) {
-  const sound = this.cards[id].sound;
+async function askWord(category, id) {
+  const sound = category.cards[id].sound;
 
-  const playSoundBinded = playSound.bind(this, sound);
+  const playSoundBinded = playSound.bind(category, sound);
   playSoundBinded();
 
   const repeatBtn = document.querySelector(".repeat-button");
   repeatBtn.addEventListener("click", playSoundBinded);
 
   try {
-    const success = addListeners(id);
+    const success = addListeners(id, category);
     await success();
     console.log("SUCCESS");
+    const card = category.cards[id];
+    incrementGuessed(card);
+    calculatePercent(card);
   } catch (err) {
     if (err.message === "menu") {
       document
         .querySelector(".start-button")
-        .removeEventListener("click", this.startGame);
+        .removeEventListener("click", category.startGame);
     }
     repeatBtn.removeEventListener("click", playSoundBinded);
     removeGameEventListeners();
@@ -108,10 +71,18 @@ function addListeners(id) {
       card.addEventListener("click", successSound);
     } else {
       card.addEventListener("click", failureSound);
+      card.addEventListener("click", countMistakes);
     }
   });
 
   return waitSuccessBinded;
+}
+
+function countMistakes() {
+  const id = gameState.wordId;
+  const category = gameState.category;
+  const card = category.cards[id];
+  incrementMistakes(card);
 }
 
 async function waitForButtonClick(card) {
@@ -152,7 +123,14 @@ function removeGameEventListeners() {
   document.querySelectorAll(".card").forEach((card) => {
     card.removeEventListener("click", successSound);
     card.removeEventListener("click", failureSound);
+    card.removeEventListener("click", countMistakes);
   });
+}
+
+function stopGame() {
+  document.querySelector("footer").classList.remove("game-on");
+  removeGameEventListeners();
+  state.gameOn = false;
 }
 
 function successSound() {
@@ -174,4 +152,4 @@ function shuffle(array) {
   }
 }
 
-export { addModeSwitchBtn, switchModes, startGame, removeGameEventListeners };
+export { startGame, removeGameEventListeners, stopGame };
