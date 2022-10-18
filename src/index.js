@@ -12,7 +12,13 @@ const state = {
   gameOn: false,
 };
 
-const gameState = {};
+const gameState = {
+  category: null,
+  wordId: null,
+  mistakes: null,
+  clickedCard: null,
+};
+
 const categories = [];
 
 const cardColTemplate = document.querySelector("#view .col").cloneNode(true);

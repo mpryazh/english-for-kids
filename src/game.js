@@ -1,8 +1,10 @@
 import { state, gameState } from "./index.js";
+import { clearCardsRow, toMainView } from "./navigation.js";
+import { switchModes } from "./play_train_modes.js";
 import {
   calculatePercent,
   incrementMistakes,
-  incrementGuessed
+  incrementGuessed,
 } from "./statistics.js";
 
 async function startGame() {
@@ -11,6 +13,7 @@ async function startGame() {
   document.querySelector("footer").classList.add("game-on");
   state.gameOn = true;
   gameState.category = this;
+  gameState.mistakes = 0;
 
   const indexes = [...Array(8).keys()];
   shuffle(indexes);
@@ -22,11 +25,46 @@ async function startGame() {
     }
   } catch (err) {
     stopGame();
+    console.log("game stopped");
+    return;
   }
 
-  console.log("all done congrats");
   state.gameOn = false;
-  document.querySelector("footer").classList.remove("game-on");
+  state.insideCategory = false;
+  switchModes();
+
+  await showFeedback();
+  toMainView();
+}
+
+async function showFeedback() {
+  clearCardsRow();
+
+  const feedbackView = document.createElement("div");
+  feedbackView.classList.add("feedback-view");
+
+  const score = document.createElement("h3");
+  const emoji = document.createElement("span");
+  emoji.classList.add("emoji");
+
+  feedbackView.append(score, emoji);
+  document.querySelector("main").append(feedbackView);
+
+  if (gameState.mistakes) {
+    score.textContent = `Oh no! ${gameState.mistakes} mistakes :(`;
+    emoji.textContent = "😢😢😢";
+    new Audio("../data/audio/failure.mp3").play();
+  } else {
+    score.textContent = "Excellent! No mistakes";
+    emoji.textContent = "😄😄😄";
+    new Audio("../data/audio/success.mp3").play();
+  }
+  return new Promise((r) =>
+    setTimeout(() => {
+      feedbackView.textContent = "";
+      r();
+    }, 10000)
+  );
 }
 
 async function askWord(category, id) {
@@ -41,7 +79,7 @@ async function askWord(category, id) {
   try {
     const success = addListeners(id, category);
     await success();
-    console.log("SUCCESS");
+
     const card = category.cards[id];
     incrementGuessed(card);
     calculatePercent(card);
@@ -67,15 +105,49 @@ function addListeners(id) {
   const waitSuccessBinded = waitForButtonClick.bind(this, cards[id]);
 
   cards.forEach((card, index) => {
+    card.addEventListener("click", (e) => handleClick(e));
     if (index === id) {
-      card.addEventListener("click", successSound);
+      card.addEventListener("click", handleSuccess);
     } else {
-      card.addEventListener("click", failureSound);
-      card.addEventListener("click", countMistakes);
+      card.addEventListener("click", handleFailure);
     }
   });
 
   return waitSuccessBinded;
+}
+
+function handleClick(e) {
+  if (state.gameOn === false) {
+    return;
+  }
+  const clickedCard = e.target.closest(".card");
+  gameState.clickedCard = clickedCard;
+}
+
+function handleSuccess() {
+  successSound();
+  addStar("right");
+}
+
+function handleFailure() {
+  failureSound();
+  countMistakes();
+  makeCardIncative();
+  addStar("wrong");
+}
+
+function addStar(right_wrong) {
+  const container = document.querySelector("#stars-container");
+  const star = document.createElement("img");
+  star.setAttribute("src", "./data/img/favicon.png");
+  star.setAttribute("alt", "");
+  star.classList.add("star", `${right_wrong}-star`);
+  container.append(star);
+}
+
+function makeCardIncative() {
+  gameState.clickedCard.removeEventListener("click", handleFailure);
+  gameState.clickedCard.classList.add("inactive-card");
 }
 
 function countMistakes() {
@@ -83,6 +155,7 @@ function countMistakes() {
   const category = gameState.category;
   const card = category.cards[id];
   incrementMistakes(card);
+  gameState.mistakes++;
 }
 
 async function waitForButtonClick(card) {
@@ -121,24 +194,25 @@ function getPromiseFromEvent(item, event) {
 
 function removeGameEventListeners() {
   document.querySelectorAll(".card").forEach((card) => {
-    card.removeEventListener("click", successSound);
-    card.removeEventListener("click", failureSound);
-    card.removeEventListener("click", countMistakes);
+    card.removeEventListener("click", handleSuccess);
+    card.removeEventListener("click", handleFailure);
+    card.classList.remove("inactive-card");
   });
 }
 
 function stopGame() {
   document.querySelector("footer").classList.remove("game-on");
   removeGameEventListeners();
+  document.querySelector("#stars-container").textContent = "";
   state.gameOn = false;
 }
 
 function successSound() {
-  new Audio("../data/audio/success.mp3").play();
+  new Audio("../data/audio/correct.mp3").play();
 }
 
 function failureSound() {
-  new Audio("../data/audio/failure.mp3").play();
+  new Audio("../data/audio/error.mp3").play();
 }
 
 function playSound(sound) {

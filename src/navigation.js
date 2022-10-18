@@ -26,14 +26,8 @@ function addNavLinks() {
 function addHomeLink() {
   const link = document.querySelector(".nav-item.home");
   link.addEventListener("click", () => {
-    if (state.insideStats) {
-      closeStats();
-    }
-    Category.reInsertCategoryCards();
-    Category.showCategories();
-
+    toMainView();
     hideMenu();
-    switchModes();
   });
 }
 
@@ -45,6 +39,15 @@ function addStatsLink() {
   });
 }
 
+function toMainView() {
+  if (state.insideStats) {
+    closeStats();
+  }
+  Category.reInsertCategoryCards();
+  Category.showCategories();
+  switchModes();
+}
+
 function toStatsView() {
   state.insideCategory = false;
   state.insideStats = true;
@@ -52,6 +55,7 @@ function toStatsView() {
   view.classList.add("hidden");
   const stats = document.querySelector("#statistics");
   stats.classList.remove("hidden");
+  document.querySelector("h1").textContent = "Statistics"
   updateStats();
   switchModes();
 }
@@ -70,4 +74,10 @@ function hideMenu() {
   document.body.style = "";
 }
 
-export { addNavLinks, toStatsView };
+function clearCardsRow() {
+  const row = document.querySelector("#view .row");
+  row.textContent = "";
+  return row;
+}
+
+export { addNavLinks, toStatsView, toMainView, clearCardsRow };

@@ -3,6 +3,7 @@ import { Card } from "./Card.js";
 import { categories, state, cardColTemplate } from "./index.js";
 import { startGame } from "./game.js";
 import { switchModes } from "./play_train_modes";
+import { clearCardsRow } from "./navigation.js";
 
 class Category {
   constructor(id) {
@@ -18,6 +19,7 @@ class Category {
       state.insideCategory = false;
       category.fillInfo();
       category.addNavigation();
+      document.querySelector("h1").textContent = "English for kids";
     }
   }
 
@@ -31,8 +33,7 @@ class Category {
   }
 
   static reInsertCategoryCards() {
-    const row = document.querySelector("#view .row");
-    row.textContent = "";
+    const row = clearCardsRow();
 
     for (const category of categories) {
       const cardCol = cardColTemplate.cloneNode(true);
@@ -42,8 +43,7 @@ class Category {
   }
 
   reInsertCards() {
-    const row = document.querySelector("#view .row");
-    row.textContent = "";
+    const row = clearCardsRow();
 
     for (const card of this.cards) {
       const cardCol = cardColTemplate.cloneNode(true);
@@ -90,6 +90,7 @@ class Category {
     const view = document.querySelector("#view");
     view.classList.add("category-view");
     view.classList.remove("main-view");
+    document.querySelector("h1").textContent = this.category;
 
     switchModes();
   }
