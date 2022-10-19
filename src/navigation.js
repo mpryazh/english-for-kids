@@ -3,6 +3,7 @@ import cards from "./data/cards.js";
 import { updateStats } from "./statistics.js";
 import { Category } from "./Category.js";
 import { switchModes } from "./play_train_modes";
+import { createDiffCards, addDiffEventListener } from "./difficultCards.js";
 
 function addNavLinks() {
   const links = document.querySelectorAll(".nav-item.category");
@@ -55,8 +56,10 @@ function toStatsView() {
   view.classList.add("hidden");
   const stats = document.querySelector("#statistics");
   stats.classList.remove("hidden");
-  document.querySelector("h1").textContent = "Statistics"
+  document.querySelector("h1").textContent = "Statistics";
   updateStats();
+  createDiffCards();
+  addDiffEventListener();
   switchModes();
 }
 
@@ -80,4 +83,4 @@ function clearCardsRow() {
   return row;
 }
 
-export { addNavLinks, toStatsView, toMainView, clearCardsRow };
+export { addNavLinks, toStatsView, toMainView, clearCardsRow, closeStats };

@@ -3,14 +3,17 @@ import { Card } from "./Card.js";
 import { categories, state, cardColTemplate } from "./index.js";
 import { startGame } from "./game.js";
 import { switchModes } from "./play_train_modes";
-import { clearCardsRow } from "./navigation.js";
+import { clearCardsRow, closeStats } from "./navigation.js";
 
 class Category {
-  constructor(id) {
+  constructor(id, difficultCategory=false) {
+    if (!difficultCategory) {
+      this.category = cards[0][id];
+      this.createCards(id);
+      this.img = "../data/" + cards[id + 1][0].image;
+      categories.push(this);
+    }
     this.id = id;
-    this.category = cards[0][id];
-    this.img = "../data/" + cards[id + 1][0].image;
-    this.createCards(id);
     this.startGame = startGame.bind(this);
   }
 
@@ -25,8 +28,7 @@ class Category {
 
   static createCategoryCards() {
     for (let i = 0; i < 8; i++) {
-      const category = new Category(i);
-      categories.push(category);
+      new Category(i);
     }
 
     Category.reInsertCategoryCards();
@@ -85,6 +87,10 @@ class Category {
   toCategoryView() {
     this.reInsertCards();
     this.addStartBtn();
+
+    if (state.insideStats) {
+      closeStats();
+    }
 
     state.insideCategory = true;
     const view = document.querySelector("#view");

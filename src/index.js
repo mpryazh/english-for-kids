@@ -26,9 +26,11 @@ const cardColTemplate = document.querySelector("#view .col").cloneNode(true);
 Category.createCategoryCards();
 Category.showCategories();
 
+const difficultCategory = new Category(-1, true);
+
 addModeSwitchBtn();
 addNavLinks();
 
 fillStats();
 
-export { state, categories, gameState, cardColTemplate };
+export { state, categories, gameState, cardColTemplate, difficultCategory };

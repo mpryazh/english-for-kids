@@ -15,7 +15,7 @@ async function startGame() {
   gameState.category = this;
   gameState.mistakes = 0;
 
-  const indexes = [...Array(8).keys()];
+  const indexes = [...Array(this.cards.length).keys()];
   shuffle(indexes);
 
   try {
@@ -33,8 +33,10 @@ async function startGame() {
   state.insideCategory = false;
   switchModes();
 
-  await showFeedback();
-  toMainView();
+  const res = await showFeedback();
+  if (res === "waited") {
+    toMainView();
+  }
 }
 
 async function showFeedback() {
@@ -59,12 +61,20 @@ async function showFeedback() {
     emoji.textContent = "😄😄😄";
     new Audio("../data/audio/success.mp3").play();
   }
-  return new Promise((r) =>
+
+  const wait = new Promise((r) =>
     setTimeout(() => {
       feedbackView.textContent = "";
-      r();
-    }, 10000)
+      r("waited");
+    }, 8000)
   );
+
+  const clickOnMenu = getPromiseFromEvent(
+    document.querySelector("#menu"),
+    "click"
+  );
+
+  return Promise.race([wait, clickOnMenu]);
 }
 
 async function askWord(category, id) {
@@ -97,7 +107,7 @@ async function askWord(category, id) {
   repeatBtn.removeEventListener("click", playSoundBinded);
   removeGameEventListeners();
 
-  await new Promise((r) => setTimeout(r, 3000));
+  await new Promise((r) => setTimeout(r, 1200));
 }
 
 function addListeners(id) {
@@ -105,11 +115,13 @@ function addListeners(id) {
   const waitSuccessBinded = waitForButtonClick.bind(this, cards[id]);
 
   cards.forEach((card, index) => {
-    card.addEventListener("click", (e) => handleClick(e));
-    if (index === id) {
-      card.addEventListener("click", handleSuccess);
-    } else {
-      card.addEventListener("click", handleFailure);
+    if (!card.classList.contains("inactive-card")) {
+      card.addEventListener("click", (e) => handleClick(e));
+      if (index === id) {
+        card.addEventListener("click", handleSuccess);
+      } else {
+        card.addEventListener("click", handleFailure);
+      }
     }
   });
 
@@ -126,13 +138,13 @@ function handleClick(e) {
 
 function handleSuccess() {
   successSound();
+  makeCardIncative();
   addStar("right");
 }
 
 function handleFailure() {
   failureSound();
   countMistakes();
-  makeCardIncative();
   addStar("wrong");
 }
 
@@ -146,7 +158,7 @@ function addStar(right_wrong) {
 }
 
 function makeCardIncative() {
-  gameState.clickedCard.removeEventListener("click", handleFailure);
+  gameState.clickedCard.removeEventListener("click", handleSuccess);
   gameState.clickedCard.classList.add("inactive-card");
 }
 
@@ -196,11 +208,14 @@ function removeGameEventListeners() {
   document.querySelectorAll(".card").forEach((card) => {
     card.removeEventListener("click", handleSuccess);
     card.removeEventListener("click", handleFailure);
-    card.classList.remove("inactive-card");
+    // card.classList.remove("inactive-card");
   });
 }
 
 function stopGame() {
+  document
+    .querySelectorAll(".card")
+    .forEach((card) => card.classList.remove("inactive-card"));
   document.querySelector("footer").classList.remove("game-on");
   removeGameEventListeners();
   document.querySelector("#stars-container").textContent = "";

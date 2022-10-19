@@ -1,5 +1,5 @@
 import { Stats } from "./Stats.js";
-import { categories } from "./index.js";
+import { categories, state } from "./index.js";
 import { toStatsView } from "./navigation.js";
 
 function fillStats() {
@@ -100,6 +100,9 @@ function incrementStats(card, param) {
 }
 
 function incrementClicks(card) {
+  if (state.playMode) {
+    return;
+  }
   incrementStats(card, "clicked");
 }
 
@@ -139,6 +142,7 @@ function resetStats() {
 
 export {
   fillStats,
+  getStats,
   updateStats,
   incrementClicks,
   incrementGuessed,
