@@ -1,6 +1,7 @@
 import { Stats } from "./Stats.js";
 import { categories, state } from "./index.js";
 import { toStatsView } from "./navigation.js";
+import { sortTable } from "./sortStatistics.js";
 
 function fillStats() {
   const table = document.querySelector("#stats-table tbody");
@@ -16,6 +17,12 @@ function fillStats() {
     }
   }
   addResetListener();
+  const tableHeaders = table.querySelectorAll("th");
+  for (const [i, header] of tableHeaders.entries()) {
+    // добавить листенеры хедерам
+    // console.log(header, i)
+    header.addEventListener("click", () => sortTable(i))
+  }
 }
 
 function getStats(key) {
