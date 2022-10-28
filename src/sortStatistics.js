@@ -1,8 +1,15 @@
 function sortTable(colNumber) {
-  const table = document.querySelector("#stats-table");
   let dir = "asc";
   let switchcount = 0;
   let switching = true;
+
+  const table = document.querySelector("#stats-table");
+  table.querySelectorAll("th").forEach((header) => {
+    header.classList.remove("asc");
+    header.classList.remove("desc");
+  });
+  const header = table.querySelector(`#stats-header :nth-child(${colNumber+1})`);
+  header.classList.add(dir);
 
   while (switching) {
     switching = false;
@@ -24,8 +31,10 @@ function sortTable(colNumber) {
     }
 
     if (switchcount === 0 && dir == "asc") {
+      header.classList.remove(dir);
       dir = "desc";
       switching = true;
+      header.classList.add(dir);
     }
   }
 }

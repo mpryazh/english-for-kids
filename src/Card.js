@@ -1,6 +1,6 @@
 import cards from "./data/cards.js";
 import { state } from "./index.js";
-import { calculatePercent, incrementClicks } from "./statistics";
+import { incrementClicks } from "./statistics";
 
 class Card {
   constructor(cat_id, id) {
@@ -15,46 +15,53 @@ class Card {
   }
 
   fillInfo() {
-    const title = this.card.querySelector(".card-title");
+    const title = this.card.querySelector(".front-side .card-title");
     title.textContent = this.dataObj.word;
-    this.card.querySelector("img").setAttribute("alt", this.dataObj.word);
-    this.card.querySelector("img").setAttribute("src", this.img);
+    const frontImg = this.card.querySelector(".front-side img");
+    frontImg.setAttribute("alt", this.dataObj.word);
+    frontImg.setAttribute("src", this.img);
     this.card.querySelector("audio").setAttribute("src", this.sound);
 
+    const backImg = this.card.querySelector(".back-side img");
+    backImg.setAttribute("alt", "");
+    backImg.setAttribute("src", this.img);
+    this.card.querySelector(".back-side .card-title").textContent =
+      this.dataObj.translation;
+
+    this.addCardEventListeners();
+  }
+
+  addCardEventListeners() {
     this.card
       .querySelector(".flip-button")
-      .addEventListener("click", (e) => this.flipCard(e, title));
+      .addEventListener("click", () => this.flipCard());
 
-    this.card.addEventListener("mouseleave", () => this.flipCardBack(title));
+    this.card.addEventListener("mouseleave", () => this.flipCardBack());
     this.card.addEventListener("click", () => {
+      if (this.flipped || state.playMode) {
+        return;
+      }
       this.playAudio();
       incrementClicks(this);
     });
   }
 
-  flipCard(e, title) {
-    e.stopPropagation();
+  flipCard() {
     if (!this.flipped) {
-      title.textContent = this.dataObj.translation;
       this.flipped = true;
       this.card.classList.add("flipped");
     }
   }
 
-  flipCardBack(title) {
+  flipCardBack() {
     if (!this.flipped) return;
-    title.textContent = this.dataObj.word;
     this.flipped = false;
     this.card.classList.remove("flipped");
   }
 
   playAudio() {
-    if (this.flipped || state.playMode) {
-      return;
-    }
     this.card.querySelector("audio").play();
   }
-
 }
 
 export { Card };

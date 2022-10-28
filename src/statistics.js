@@ -4,23 +4,21 @@ import { toStatsView } from "./navigation.js";
 import { sortTable } from "./sortStatistics.js";
 
 function fillStats() {
-  const table = document.querySelector("#stats-table tbody");
+  const tbody = document.querySelector("#stats-table tbody");
 
   for (const category of categories) {
     for (let id = 0; id < 8; id++) {
       const card = category.cards[id];
       const stats = getStats(card.key);
       const row = createRow(card, stats);
-      table.append(row);
+      tbody.append(row);
 
       localStorage.setItem(card.key, JSON.stringify(stats));
     }
   }
   addResetListener();
-  const tableHeaders = table.querySelectorAll("th");
+  const tableHeaders = tbody.querySelectorAll("th");
   for (const [i, header] of tableHeaders.entries()) {
-    // добавить листенеры хедерам
-    // console.log(header, i)
     header.addEventListener("click", () => sortTable(i))
   }
 }

@@ -27,11 +27,15 @@ function createDiffCards() {
 }
 
 function addDiffEventListener() {
-  document.querySelector("#repeat-diff-btn").addEventListener("click", () => {
-    if (!difficultCategory.cards?.length) {
-      console.log("no cards");
-      return;
-    }
+  const repeatBtn = document.querySelector("#repeat-diff-btn");
+
+  if (!difficultCategory.cards?.length) {
+    repeatBtn.setAttribute("disabled", "true");
+    return;
+  }
+  repeatBtn.removeAttribute("disabled");
+
+  repeatBtn.addEventListener("click", () => {
     difficultCategory.toCategoryView();
   });
 }

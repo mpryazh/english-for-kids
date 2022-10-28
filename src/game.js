@@ -6,11 +6,12 @@ import {
   incrementMistakes,
   incrementGuessed,
 } from "./statistics.js";
+import { showFeedback, removeFeedback } from "./feedback.js";
 
 async function startGame() {
   console.log("start game");
 
-  document.querySelector("footer").classList.add("game-on");
+  document.querySelector("main").classList.add("game-on");
   state.gameOn = true;
   gameState.category = this;
   gameState.mistakes = 0;
@@ -29,52 +30,13 @@ async function startGame() {
     return;
   }
 
-  state.gameOn = false;
-  state.insideCategory = false;
-  switchModes();
+  stopGame();
 
   const res = await showFeedback();
+  removeFeedback();
   if (res === "waited") {
     toMainView();
   }
-}
-
-async function showFeedback() {
-  clearCardsRow();
-
-  const feedbackView = document.createElement("div");
-  feedbackView.classList.add("feedback-view");
-
-  const score = document.createElement("h3");
-  const emoji = document.createElement("span");
-  emoji.classList.add("emoji");
-
-  feedbackView.append(score, emoji);
-  document.querySelector("main").append(feedbackView);
-
-  if (gameState.mistakes) {
-    score.textContent = `Oh no! ${gameState.mistakes} mistakes :(`;
-    emoji.textContent = "😢😢😢";
-    new Audio("../data/audio/failure.mp3").play();
-  } else {
-    score.textContent = "Excellent! No mistakes";
-    emoji.textContent = "😄😄😄";
-    new Audio("../data/audio/success.mp3").play();
-  }
-
-  const wait = new Promise((r) =>
-    setTimeout(() => {
-      feedbackView.textContent = "";
-      r("waited");
-    }, 8000)
-  );
-
-  const clickOnMenu = getPromiseFromEvent(
-    document.querySelector("#menu"),
-    "click"
-  );
-
-  return Promise.race([wait, clickOnMenu]);
 }
 
 async function askWord(category, id) {
@@ -94,11 +56,6 @@ async function askWord(category, id) {
     incrementGuessed(card);
     calculatePercent(card);
   } catch (err) {
-    if (err.message === "menu") {
-      document
-        .querySelector(".start-button")
-        .removeEventListener("click", category.startGame);
-    }
     repeatBtn.removeEventListener("click", playSoundBinded);
     removeGameEventListeners();
     throw err;
@@ -139,21 +96,20 @@ function handleClick(e) {
 function handleSuccess() {
   successSound();
   makeCardIncative();
-  addStar("right");
+  addStar(true);
 }
 
 function handleFailure() {
   failureSound();
   countMistakes();
-  addStar("wrong");
+  addStar(false);
 }
 
-function addStar(right_wrong) {
+function addStar(correct) {
   const container = document.querySelector("#stars-container");
-  const star = document.createElement("img");
-  star.setAttribute("src", "./data/img/favicon.png");
-  star.setAttribute("alt", "");
-  star.classList.add("star", `${right_wrong}-star`);
+  const star = document.createElement("p");
+  star.textContent = correct ? "💎" : "💣";
+  star.classList.add("star");
   container.append(star);
 }
 
@@ -185,6 +141,7 @@ async function waitForButtonClick(card) {
     clickOnMenu,
     switchModes,
   ]);
+  console.log(res);
   if (res.id === "menu") {
     throw Error("menu");
   }
@@ -208,7 +165,6 @@ function removeGameEventListeners() {
   document.querySelectorAll(".card").forEach((card) => {
     card.removeEventListener("click", handleSuccess);
     card.removeEventListener("click", handleFailure);
-    // card.classList.remove("inactive-card");
   });
 }
 
@@ -216,7 +172,7 @@ function stopGame() {
   document
     .querySelectorAll(".card")
     .forEach((card) => card.classList.remove("inactive-card"));
-  document.querySelector("footer").classList.remove("game-on");
+  document.querySelector("main").classList.remove("game-on");
   removeGameEventListeners();
   document.querySelector("#stars-container").textContent = "";
   state.gameOn = false;
@@ -241,4 +197,4 @@ function shuffle(array) {
   }
 }
 
-export { startGame, removeGameEventListeners, stopGame };
+export { startGame, removeGameEventListeners, stopGame, getPromiseFromEvent };

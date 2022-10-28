@@ -3,6 +3,7 @@ import { Category } from "./Category.js";
 import { addNavLinks } from "./navigation.js";
 import { fillStats } from "./statistics.js";
 import "./styles/style.css";
+import "./styles/switchBtn.css";
 import "./styles/bootstrap.css";
 
 const state = {

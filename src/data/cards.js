@@ -310,8 +310,6 @@ const cards = [
     },
   ],
 
-
-  // my food
   [
     {
       word: "ice cream",
@@ -362,8 +360,7 @@ const cards = [
       audioSrc: "audio/apple.ogg",
     },
   ],
-
-  // my weather
+  
   [
     {
       word: "rain",

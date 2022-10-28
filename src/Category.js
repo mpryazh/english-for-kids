@@ -3,10 +3,10 @@ import { Card } from "./Card.js";
 import { categories, state, cardColTemplate } from "./index.js";
 import { startGame } from "./game.js";
 import { switchModes } from "./play_train_modes";
-import { clearCardsRow, closeStats } from "./navigation.js";
+import { clearCardsRow, closeStats, highlightCurrentLink } from "./navigation.js";
 
 class Category {
-  constructor(id, difficultCategory=false) {
+  constructor(id, difficultCategory = false) {
     if (!difficultCategory) {
       this.category = cards[0][id];
       this.createCards(id);
@@ -69,13 +69,23 @@ class Category {
 
     const startBtn = document.createElement("button");
     startBtn.classList.add("button", "start-button");
-    startBtn.textContent = "Start";
+    const icon = document.createElement("span");
+    icon.classList.add("material-symbols-outlined");
+    icon.textContent = "play_circle";
+    const start = document.createElement("span");
+    start.textContent = " Start";
+    startBtn.append(icon, start);
     startBtn.addEventListener("click", this.startGame);
-    document.querySelector("footer").append(startBtn);
+
+    document.querySelector("#game-buttons").append(startBtn);
   }
 
   addNavigation() {
-    this.card.addEventListener("click", (e) => this.toCategoryView(e.target));
+    this.card.addEventListener("click", (e) => {
+      this.toCategoryView(e.target);
+      const link = document.querySelector(`.navbar-nav :nth-child(${this.id + 2})`);
+      highlightCurrentLink(link);
+    });
   }
 
   fillInfo() {
