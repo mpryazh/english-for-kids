@@ -89,9 +89,9 @@
   }
 
   .layer::after {
-    left: 30px;
-    top: 3px;
-    font-size: medium;
+    left: 29px;
+    top: 4px;
+    font-size: 14px;
   }
 
   #play-train-btn .checkbox:checked ~ .layer::after {
@@ -107,8 +107,4 @@
   #play-train-btn .checkbox:checked + .knobs:before {
     left: 51px;
   }
-
-
-
-
 }

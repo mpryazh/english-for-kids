@@ -213,15 +213,13 @@ height: 30px;
   color: var(--bs-white);
   background-color: var(--bs-primary);
   border: none;
-  /* border: 3px solid var(--bs-purple); */
   border-bottom: none;
   border-radius: 30px;
   border-bottom-left-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
   width: 150px !important;
   height: 70px !important;
-  /* box-shadow: rgba(154, 147, 161, 0.48) 6px 2px 16px 0px, rgba(210, 209, 212, 0.8) -6px -2px 16px 0px; */
-}
+ }
 
 #game-buttons span {
   vertical-align: middle;
