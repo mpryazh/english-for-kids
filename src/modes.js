@@ -1,6 +1,4 @@
-import { state } from "./index.js";
-import { stopGameState } from "./game";
-import { closeStats } from "./navigation.js";
+import { state } from "./index.js";;
 
 function addModeSwitchBtn() {
   let switchBtn = document.querySelector("#play-train-btn .checkbox");
