@@ -9,7 +9,7 @@ class Card {
     this.key = cat_id + "_" + id;
     this.category = cards[0][cat_id];
     this.dataObj = cards[cat_id + 1][id];
-    this.img = "../data/" + this.dataObj.image;
+    this.img = "./data/" + this.dataObj.image;
     this.sound = "./data/" + this.dataObj.audioSrc;
     this.flipped = false;
   }

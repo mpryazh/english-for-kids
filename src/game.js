@@ -164,11 +164,11 @@ function stopGameState() {
 }
 
 function successSound() {
-  new Audio("../data/audio/correct.mp3").play();
+  new Audio("./data/audio/correct.mp3").play();
 }
 
 function failureSound() {
-  new Audio("../data/audio/error.mp3").play();
+  new Audio("./data/audio/error.mp3").play();
 }
 
 function playSound(sound) {

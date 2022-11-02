@@ -19,11 +19,11 @@ async function showFeedback() {
   if (gameState.mistakes) {
     score.textContent = `Oh no! ${gameState.mistakes} mistakes :(`;
     emoji.textContent = "😢😢😢";
-    new Audio("../data/audio/failure.mp3").play();
+    new Audio("./data/audio/failure.mp3").play();
   } else {
     score.textContent = "Excellent! No mistakes";
     emoji.textContent = "😄😄😄";
-    new Audio("../data/audio/success.mp3").play();
+    new Audio("./data/audio/success.mp3").play();
   }
 
   const wait = new Promise((r) =>

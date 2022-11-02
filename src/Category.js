@@ -17,7 +17,7 @@ class Category {
     if (!difficultCategory) {
       this.name = cards[0][id];
       this.createCards();
-      this.img = "../data/" + cards[id + 1][0].image;
+      this.img = "./data/" + cards[id + 1][0].image;
       categories.push(this);
     }
   }
