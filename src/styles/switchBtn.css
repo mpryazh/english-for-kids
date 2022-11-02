@@ -44,6 +44,7 @@
 
 .layer::after {
   content: "TRAIN";
+  color: var(--bs-primary);
   font-size: large;
   position: absolute;
   top: 6px;
@@ -58,7 +59,7 @@
   width: 30px;
   height: 30px;
   padding: 9px 4px;
-  background-color: var(--bs-orange);
+  background-color: var(--bs-yellow);
   border-radius: 50%;
   transition: 0.3s cubic-bezier(0.18, 0.89, 0.35, 1.15) all;
 }

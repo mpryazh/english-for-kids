@@ -2,27 +2,23 @@ import cards from "./data/cards.js";
 import { Card } from "./Card.js";
 import { categories, state, cardColTemplate } from "./index.js";
 import { startGame } from "./game.js";
-import { switchModes } from "./play_train_modes";
-import { clearCardsRow, closeStats, highlightCurrentLink } from "./navigation.js";
+import { switchModes } from "./modes";
+import {
+  clearCardsRow,
+  closeStats,
+  highlightCurrentLink,
+} from "./navigation.js";
 
 class Category {
   constructor(id, difficultCategory = false) {
-    if (!difficultCategory) {
-      this.category = cards[0][id];
-      this.createCards(id);
-      this.img = "../data/" + cards[id + 1][0].image;
-      categories.push(this);
-    }
     this.id = id;
     this.startGame = startGame.bind(this);
-  }
 
-  static showCategories() {
-    for (const category of categories) {
-      state.insideCategory = false;
-      category.fillInfo();
-      category.addNavigation();
-      document.querySelector("h1").textContent = "English for kids";
+    if (!difficultCategory) {
+      this.name = cards[0][id];
+      this.createCards();
+      this.img = "../data/" + cards[id + 1][0].image;
+      categories.push(this);
     }
   }
 
@@ -30,38 +26,41 @@ class Category {
     for (let i = 0; i < 8; i++) {
       new Category(i);
     }
-
-    Category.reInsertCategoryCards();
+    Category.showCategories();
   }
 
-  static reInsertCategoryCards() {
-    const row = clearCardsRow();
+  static showCategories() {
+    Category.insert(categories);
+    state.insideCategory = false;
+    switchModes();
 
     for (const category of categories) {
-      const cardCol = cardColTemplate.cloneNode(true);
-      row.append(cardCol);
-      category.card = cardCol.querySelector(".card");
+      category.addNavigation();
     }
   }
 
-  reInsertCards() {
+  static insert(arr) {
     const row = clearCardsRow();
 
-    for (const card of this.cards) {
+    for (const cardObj of arr) {
       const cardCol = cardColTemplate.cloneNode(true);
       row.append(cardCol);
-      card.card = cardCol.querySelector(".card");
-      card.fillInfo();
+      cardObj.card = cardCol.querySelector(".card");
+      cardObj.fillInfo();
     }
   }
 
-  createCards(cat_id) {
+  createCards() {
     this.cards = [];
 
     for (let i = 0; i < 8; i++) {
-      const card = new Card(cat_id, i);
+      const card = new Card(this.id, i);
       this.cards.push(card);
     }
+  }
+
+  insertCards() {
+    Category.insert(this.cards);
   }
 
   addStartBtn() {
@@ -83,31 +82,29 @@ class Category {
   addNavigation() {
     this.card.addEventListener("click", (e) => {
       this.toCategoryView(e.target);
-      const link = document.querySelector(`.navbar-nav :nth-child(${this.id + 2})`);
+      const link = document.querySelector(
+        `.navbar-nav :nth-child(${this.id + 2})`
+      );
       highlightCurrentLink(link);
     });
   }
 
   fillInfo() {
-    this.card.querySelector(".card-title").textContent = this.category;
-    this.card.querySelector("img").setAttribute("alt", this.category);
+    this.card.querySelector(".card-title").textContent = this.name;
+    this.card.querySelector("img").setAttribute("alt", this.name);
     this.card.querySelector("img").setAttribute("src", this.img);
   }
 
   toCategoryView() {
-    this.reInsertCards();
-    this.addStartBtn();
-
     if (state.insideStats) {
       closeStats();
     }
 
-    state.insideCategory = true;
-    const view = document.querySelector("#view");
-    view.classList.add("category-view");
-    view.classList.remove("main-view");
-    document.querySelector("h1").textContent = this.category;
+    this.insertCards();
+    this.addStartBtn();
 
+    document.querySelector("h1").textContent = this.name;
+    state.insideCategory = true;
     switchModes();
   }
 }

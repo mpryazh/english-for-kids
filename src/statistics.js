@@ -1,33 +1,26 @@
 import { Stats } from "./Stats.js";
 import { categories, state } from "./index.js";
 import { toStatsView } from "./navigation.js";
-import { sortTable } from "./sortStatistics.js";
+import { sortTable } from "./sort_statistics.js";
 
-function fillStats() {
+function createStats() {
   const tbody = document.querySelector("#stats-table tbody");
 
   for (const category of categories) {
-    for (let id = 0; id < 8; id++) {
-      const card = category.cards[id];
-      const stats = getStats(card.key);
-      const row = createRow(card, stats);
+    for (const card of category.cards) {
+      const row = createRow(card);
       tbody.append(row);
-
-      localStorage.setItem(card.key, JSON.stringify(stats));
     }
   }
   addResetListener();
   const tableHeaders = tbody.querySelectorAll("th");
   for (const [i, header] of tableHeaders.entries()) {
-    header.addEventListener("click", () => sortTable(i))
+    header.addEventListener("click", () => sortTable(i));
   }
 }
 
 function getStats(key) {
-  const stats =
-    localStorage.length === 64
-      ? JSON.parse(localStorage.getItem(key))
-      : new Stats(key);
+  const stats = JSON.parse(localStorage.getItem(key)) || new Stats(key);
   return stats;
 }
 
@@ -44,20 +37,9 @@ function fillRow(card, stats) {
   const row = document.querySelector(
     `tr.cat${card.category_id}.${card.dataObj.word.replace(" ", "_")}`
   );
-  const colNames = [
-    "word",
-    "category",
-    "translation",
-    "clicked",
-    "guessed",
-    "mistakes",
-    "correctPercentage",
-  ];
-  const wordData = {
-    word: card.dataObj.word,
-    category: card.category,
-    translation: card.dataObj.translation,
-  };
+
+  const colNames = Stats.getColNames();
+  const wordData = card.getWordData();
 
   for (const key of colNames) {
     const elem = row.querySelector(`td.${key}`);
@@ -65,36 +47,20 @@ function fillRow(card, stats) {
   }
 }
 
-function createRow(card, stats) {
+function createRow(card) {
   const row = document.createElement("tr");
+  const colNames = Stats.getColNames();
 
-  const colNames = [
-    "word",
-    "category",
-    "translation",
-    "clicked",
-    "guessed",
-    "mistakes",
-    "correctPercentage",
-  ];
-  const wordData = {
-    word: card.dataObj.word,
-    category: card.category,
-    translation: card.dataObj.translation,
-    category_id: card.category_id,
-  };
   row.classList.add(
-    "cat" + wordData.category_id,
-    wordData.word.replace(" ", "_")
+    "cat" + card.category_id,
+    card.dataObj.word.replace(" ", "_")
   );
 
   for (const key of colNames) {
     const elem = document.createElement("td");
     elem.classList.add(key);
-    elem.textContent = { ...wordData, ...stats }[key];
     row.append(elem);
   }
-
   return row;
 }
 
@@ -136,17 +102,13 @@ function calculatePercent(card) {
 
 function addResetListener() {
   document.querySelector("#reset-btn").addEventListener("click", () => {
-    resetStats();
+    localStorage.clear();
     toStatsView();
   });
 }
 
-function resetStats() {
-  localStorage.clear();
-}
-
 export {
-  fillStats,
+  createStats,
   getStats,
   updateStats,
   incrementClicks,

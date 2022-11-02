@@ -83,7 +83,7 @@ h1 {
   max-width: 280px;
   height: 220px !important;
   position: relative;
-  transition: transform 0.8s;
+  transition: 0.7s;
   transform-style: preserve-3d;
 }
 

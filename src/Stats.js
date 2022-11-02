@@ -4,7 +4,19 @@ class Stats {
     this.guessed = 0;
     this.mistakes = 0;
     this.correctPercentage = 0;
-    localStorage.setItem(key, JSON.stringify(this))
+    localStorage.setItem(key, JSON.stringify(this));
+  }
+
+  static getColNames() {
+    return [
+      "word",
+      "category",
+      "translation",
+      "clicked",
+      "guessed",
+      "mistakes",
+      "correctPercentage",
+    ];
   }
 }
 

@@ -1,8 +1,10 @@
 import { getStats } from "./statistics.js";
-import { difficultCategory, categories } from "./index.js";
+import { categories } from "./index.js";
+import { Category } from "./Category.js";
 
 function createDiffCards() {
-  difficultCategory.category = "Difficult words";
+  const difficultCategory = new Category(-1, true);
+  difficultCategory.name = "Difficult words";
   difficultCategory.cards = [];
   const cardsWithMistakes = [];
 
@@ -24,17 +26,19 @@ function createDiffCards() {
       : cardsWithMistakes.map((obj) => obj.card);
 
   difficultCategory.cards.push(...difficultCards);
+
+  addDiffEventListener(difficultCategory);
 }
 
-function addDiffEventListener() {
+function addDiffEventListener(difficultCategory) {
   const repeatBtn = document.querySelector("#repeat-diff-btn");
 
   if (!difficultCategory.cards?.length) {
     repeatBtn.setAttribute("disabled", "true");
     return;
   }
-  repeatBtn.removeAttribute("disabled");
 
+  repeatBtn.removeAttribute("disabled");
   repeatBtn.addEventListener("click", () => {
     difficultCategory.toCategoryView();
   });

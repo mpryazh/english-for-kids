@@ -1,15 +1,37 @@
 import { categories, state } from "./index.js";
-import cards from "./data/cards.js";
 import { updateStats } from "./statistics.js";
 import { Category } from "./Category.js";
-import { switchModes } from "./play_train_modes";
-import { createDiffCards, addDiffEventListener } from "./difficultCards.js";
+import { switchModes } from "./modes";
+import { createDiffCards } from "./difficult_cards.js";
 
 function addNavLinks() {
-  addCategoryLinks();
   addHomeLink();
+  addCategoryLinks();
   addStatsLink();
   manageMenu();
+}
+
+function addHomeLink() {
+  const link = document.querySelector(".nav-item.home");
+  link.addEventListener("click", toMainView);
+  highlightCurrentLink(link);
+}
+
+function addCategoryLinks() {
+  const links = document.querySelectorAll(".nav-item.category");
+
+  for (const [i, link] of links.entries()) {
+    const category = categories[i];
+    link.textContent = category.name;
+    link.addEventListener("click", () => {
+      category.toCategoryView();
+      category.addStartBtn();
+    });
+  }
+}
+
+function addStatsLink() {
+  document.querySelector("#nav-stats").addEventListener("click", toStatsView);
 }
 
 function manageMenu() {
@@ -21,33 +43,6 @@ function manageMenu() {
     bsOffcanvas.toggle();
     highlightCurrentLink(e.target.closest(".nav-item"));
   });
-}
-
-function addCategoryLinks() {
-  const links = document.querySelectorAll(".nav-item.category");
-
-  for (let i = 0; i < 8; i++) {
-    const link = links[i];
-    link.textContent = cards[0][i];
-    link.addEventListener("click", () => {
-      if (state.insideStats) {
-        closeStats();
-      }
-      const category = categories[i];
-      category.toCategoryView();
-      category.addStartBtn();
-    });
-  }
-}
-
-function addHomeLink() {
-  const link = document.querySelector(".nav-item.home");
-  link.addEventListener("click", toMainView);
-  highlightCurrentLink(link);
-}
-
-function addStatsLink() {
-  document.querySelector("#nav-stats").addEventListener("click", toStatsView);
 }
 
 function highlightCurrentLink(link) {
@@ -64,7 +59,6 @@ function toMainView() {
   if (state.insideStats) {
     closeStats();
   }
-  Category.reInsertCategoryCards();
   Category.showCategories();
   highlightCurrentLink(document.querySelector(".nav-item.home"));
   switchModes();
@@ -73,25 +67,15 @@ function toMainView() {
 function toStatsView() {
   state.insideCategory = false;
   state.insideStats = true;
-  const view = document.querySelector("#view");
-  view.classList.add("hidden");
-  const stats = document.querySelector("#statistics");
-  stats.classList.remove("hidden");
-  document.querySelector("header").classList.add("stats-open");
-  document.querySelector("h1").textContent = "Statistics";
+  switchModes();
+
   updateStats();
   createDiffCards();
-  addDiffEventListener();
-  switchModes();
 }
 
 function closeStats() {
-  const view = document.querySelector("#view");
-  view.classList.remove("hidden");
-  const stats = document.querySelector("#statistics");
-  stats.classList.add("hidden");
-  document.querySelector("header").classList.remove("stats-open");
   state.insideStats = false;
+  switchModes();
 }
 
 function clearCardsRow() {

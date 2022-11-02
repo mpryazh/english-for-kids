@@ -1,5 +1,6 @@
 import { state } from "./index.js";
-import { stopGame } from "./game";
+import { stopGameState } from "./game";
+import { closeStats } from "./navigation.js";
 
 function addModeSwitchBtn() {
   let switchBtn = document.querySelector("#play-train-btn .checkbox");
@@ -18,6 +19,8 @@ function addModeSwitchBtn() {
 
 function switchModes() {
   const view = document.querySelector("#view");
+  const title = document.querySelector("h1");
+
   if (state.insideCategory) {
     view.classList.add("category-view");
     view.classList.remove("main-view");
@@ -25,21 +28,24 @@ function switchModes() {
   if (!state.insideCategory) {
     view.classList.remove("category-view");
     view.classList.add("main-view");
-    stopGame();
+    title.textContent = "English for kids";
   }
   if (state.playMode) {
     view.classList.add("play-mode");
   }
   if (!state.playMode) {
     view.classList.remove("play-mode");
-    stopGame();
-  }
-  if (state.gameOn && !state.playMode) {
-    stopGame();
   }
   if (state.insideStats) {
-    stopGame();
-    view.classList.remove("category-view");
+    view.classList.add("hidden");
+    document.querySelector("#statistics").classList.remove("hidden");
+    document.querySelector("header").classList.add("stats-open");
+    title.textContent = "Statistics";
+  }
+  if (!state.insideStats) {
+    view.classList.remove("hidden");
+    document.querySelector("#statistics").classList.add("hidden");
+    document.querySelector("header").classList.remove("stats-open");
   }
 }
 

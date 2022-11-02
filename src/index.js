@@ -1,7 +1,7 @@
-import { addModeSwitchBtn } from "./play_train_modes";
+import { addModeSwitchBtn } from "./modes";
 import { Category } from "./Category.js";
 import { addNavLinks } from "./navigation.js";
-import { fillStats } from "./statistics.js";
+import { createStats } from "./statistics.js";
 import "./styles/style.css";
 import "./styles/switchBtn.css";
 import "./styles/bootstrap.css";
@@ -25,13 +25,11 @@ const categories = [];
 const cardColTemplate = document.querySelector("#view .col").cloneNode(true);
 
 Category.createCategoryCards();
-Category.showCategories();
-
-const difficultCategory = new Category(-1, true);
 
 addModeSwitchBtn();
+
 addNavLinks();
 
-fillStats();
+createStats();
 
-export { state, categories, gameState, cardColTemplate, difficultCategory };
+export { state, categories, gameState, cardColTemplate };

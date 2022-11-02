@@ -15,11 +15,11 @@ class Card {
   }
 
   fillInfo() {
-    const title = this.card.querySelector(".front-side .card-title");
-    title.textContent = this.dataObj.word;
     const frontImg = this.card.querySelector(".front-side img");
     frontImg.setAttribute("alt", this.dataObj.word);
     frontImg.setAttribute("src", this.img);
+    this.card.querySelector(".front-side .card-title").textContent =
+      this.dataObj.word;
     this.card.querySelector("audio").setAttribute("src", this.sound);
 
     const backImg = this.card.querySelector(".back-side img");
@@ -36,7 +36,10 @@ class Card {
       .querySelector(".flip-button")
       .addEventListener("click", () => this.flipCard());
 
-    this.card.addEventListener("mouseleave", () => this.flipCardBack());
+    this.card
+      .querySelector(".back-side")
+      .addEventListener("mouseleave", () => this.flipCard());
+
     this.card.addEventListener("click", () => {
       if (this.flipped || state.playMode) {
         return;
@@ -50,17 +53,22 @@ class Card {
     if (!this.flipped) {
       this.flipped = true;
       this.card.classList.add("flipped");
+    } else {
+      this.flipped = false;
+      this.card.classList.remove("flipped");
     }
-  }
-
-  flipCardBack() {
-    if (!this.flipped) return;
-    this.flipped = false;
-    this.card.classList.remove("flipped");
   }
 
   playAudio() {
     this.card.querySelector("audio").play();
+  }
+
+  getWordData() {
+    return {
+      word: this.dataObj.word,
+      category: this.category,
+      translation: this.dataObj.translation,
+    };
   }
 }
 

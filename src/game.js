@@ -1,6 +1,5 @@
 import { state, gameState } from "./index.js";
-import { clearCardsRow, toMainView } from "./navigation.js";
-import { switchModes } from "./play_train_modes.js";
+import { toMainView } from "./navigation.js";
 import {
   calculatePercent,
   incrementMistakes,
@@ -9,12 +8,7 @@ import {
 import { showFeedback, removeFeedback } from "./feedback.js";
 
 async function startGame() {
-  console.log("start game");
-
-  document.querySelector("main").classList.add("game-on");
-  state.gameOn = true;
-  gameState.category = this;
-  gameState.mistakes = 0;
+  startGameState(this);
 
   const indexes = [...Array(this.cards.length).keys()];
   shuffle(indexes);
@@ -25,12 +19,10 @@ async function startGame() {
       await askWord(this, id);
     }
   } catch (err) {
-    stopGame();
-    console.log("game stopped");
     return;
   }
 
-  stopGame();
+  stopGameState();
 
   const res = await showFeedback();
   removeFeedback();
@@ -41,23 +33,23 @@ async function startGame() {
 
 async function askWord(category, id) {
   const sound = category.cards[id].sound;
-
   const playSoundBinded = playSound.bind(category, sound);
-  playSoundBinded();
 
   const repeatBtn = document.querySelector(".repeat-button");
   repeatBtn.addEventListener("click", playSoundBinded);
 
   try {
-    const success = addListeners(id, category);
-    await success();
+    addListeners(id);
+    const cardObj = category.cards[id];
 
-    const card = category.cards[id];
-    incrementGuessed(card);
-    calculatePercent(card);
+    playSoundBinded();
+    await getAnswer(cardObj.card);
+
+    incrementGuessed(cardObj);
+    calculatePercent(cardObj);
   } catch (err) {
     repeatBtn.removeEventListener("click", playSoundBinded);
-    removeGameEventListeners();
+    stopGameState();
     throw err;
   }
 
@@ -69,7 +61,6 @@ async function askWord(category, id) {
 
 function addListeners(id) {
   const cards = document.querySelectorAll(".card");
-  const waitSuccessBinded = waitForButtonClick.bind(this, cards[id]);
 
   cards.forEach((card, index) => {
     if (!card.classList.contains("inactive-card")) {
@@ -81,16 +72,40 @@ function addListeners(id) {
       }
     }
   });
+}
 
-  return waitSuccessBinded;
+async function getAnswer(card) {
+  const receiveRightAnswer = getPromiseFromEvent(card);
+  const clickOnMenu = getPromiseFromEvent(document.querySelector("#menu"));
+  const switchModes = getPromiseFromEvent(
+    document.querySelector("#play-train-btn")
+  );
+  const res = await Promise.race([
+    receiveRightAnswer,
+    clickOnMenu,
+    switchModes,
+  ]);
+
+  if (res.id === "menu" || res.id === "play-train-btn") {
+    throw Error("User left the game");
+  }
+}
+
+function getPromiseFromEvent(item, event = "click") {
+  return new Promise((resolve) => {
+    const listener = () => {
+      item.removeEventListener(event, listener);
+      resolve(item);
+    };
+    item.addEventListener(event, listener);
+  });
 }
 
 function handleClick(e) {
   if (state.gameOn === false) {
     return;
   }
-  const clickedCard = e.target.closest(".card");
-  gameState.clickedCard = clickedCard;
+  gameState.clickedCard = e.target.closest(".card");
 }
 
 function handleSuccess() {
@@ -119,46 +134,9 @@ function makeCardIncative() {
 }
 
 function countMistakes() {
-  const id = gameState.wordId;
-  const category = gameState.category;
-  const card = category.cards[id];
+  const card = gameState.category.cards[gameState.wordId];
   incrementMistakes(card);
   gameState.mistakes++;
-}
-
-async function waitForButtonClick(card) {
-  const receiveRightAnswer = getPromiseFromEvent(card, "click");
-  const clickOnMenu = getPromiseFromEvent(
-    document.querySelector("#menu"),
-    "click"
-  );
-  const switchModes = getPromiseFromEvent(
-    document.querySelector("#play-train-btn"),
-    "click"
-  );
-  const res = await Promise.race([
-    receiveRightAnswer,
-    clickOnMenu,
-    switchModes,
-  ]);
-  console.log(res);
-  if (res.id === "menu") {
-    throw Error("menu");
-  }
-  if (res.id === "play-train-btn") {
-    throw Error("switch");
-  }
-  return 1;
-}
-
-function getPromiseFromEvent(item, event) {
-  return new Promise((resolve) => {
-    const listener = () => {
-      item.removeEventListener(event, listener);
-      resolve(item);
-    };
-    item.addEventListener(event, listener);
-  });
 }
 
 function removeGameEventListeners() {
@@ -168,7 +146,14 @@ function removeGameEventListeners() {
   });
 }
 
-function stopGame() {
+function startGameState(category) {
+  document.querySelector("main").classList.add("game-on");
+  state.gameOn = true;
+  gameState.category = category;
+  gameState.mistakes = 0;
+}
+
+function stopGameState() {
   document
     .querySelectorAll(".card")
     .forEach((card) => card.classList.remove("inactive-card"));
@@ -197,4 +182,9 @@ function shuffle(array) {
   }
 }
 
-export { startGame, removeGameEventListeners, stopGame, getPromiseFromEvent };
+export {
+  startGame,
+  removeGameEventListeners,
+  stopGameState,
+  getPromiseFromEvent,
+};

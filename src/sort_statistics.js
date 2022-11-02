@@ -1,6 +1,6 @@
 function sortTable(colNumber) {
   let dir = "asc";
-  let switchcount = 0;
+  let switchCount = 0;
   let switching = true;
 
   const table = document.querySelector("#stats-table");
@@ -8,7 +8,9 @@ function sortTable(colNumber) {
     header.classList.remove("asc");
     header.classList.remove("desc");
   });
-  const header = table.querySelector(`#stats-header :nth-child(${colNumber+1})`);
+  const header = table.querySelector(
+    `#stats-header :nth-child(${colNumber + 1})`
+  );
   header.classList.add(dir);
 
   while (switching) {
@@ -26,15 +28,15 @@ function sortTable(colNumber) {
       if (shouldSwitch) {
         rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
         switching = true;
-        switchcount++;
+        switchCount++;
       }
     }
 
-    if (switchcount === 0 && dir == "asc") {
+    if (switchCount === 0 && dir == "asc") {
       header.classList.remove(dir);
       dir = "desc";
-      switching = true;
       header.classList.add(dir);
+      switching = true;
     }
   }
 }
@@ -42,7 +44,8 @@ function sortTable(colNumber) {
 function checkSwitch(x, y, dir) {
   x = x.innerHTML.toLowerCase();
   y = y.innerHTML.toLowerCase();
-  if (dir == "asc") {
+
+  if (dir === "asc") {
     if (isNaN(Number(x))) {
       if (x > y) {
         return true;
@@ -50,7 +53,7 @@ function checkSwitch(x, y, dir) {
     } else if (Number(x) > Number(y)) {
       return true;
     }
-  } else if (dir == "desc") {
+  } else if (dir === "desc") {
     if (isNaN(Number(x))) {
       if (x < y) {
         return true;

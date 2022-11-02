@@ -33,10 +33,7 @@ async function showFeedback() {
     }, 8000)
   );
 
-  const clickOnMenu = getPromiseFromEvent(
-    document.querySelector("#menu"),
-    "click"
-  );
+  const clickOnMenu = getPromiseFromEvent(document.querySelector("#menu"));
 
   return Promise.race([wait, clickOnMenu]);
 }
