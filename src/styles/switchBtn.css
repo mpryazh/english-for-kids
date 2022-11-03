@@ -81,6 +81,37 @@
   transition: 0.3s ease all;
 }
 
+@media (min-width: 992px) {
+  .button {
+    width: 170px;
+    height: 65px;
+  }
+
+  .layer {
+    border: 3px solid var(--bs-primary);
+  }
+
+  .layer::after {
+    left: 65px;
+    top: 11px;
+    font-size: 28px;
+  }
+
+  #play-train-btn .checkbox:checked ~ .layer::after {
+    left: -30px;
+  }
+
+  #play-train-btn .knobs:before {
+    width: 55px;
+    height: 55px;
+    top: 5px;
+  }
+
+  #play-train-btn .checkbox:checked + .knobs:before {
+    left: 111px;
+  }
+}
+
 @media (max-width: 484px) {
   .button {
     width: 80px;

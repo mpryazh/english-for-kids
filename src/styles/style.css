@@ -1,5 +1,5 @@
 body * {
-  font-family: 'Nunito', sans-serif;
+  font-family: "Nunito", sans-serif;
 }
 
 body {
@@ -44,7 +44,7 @@ h1 {
 .nav-item {
   cursor: pointer;
   font-size: medium;
-  border-radius:  30px;
+  border-radius: 30px;
 }
 
 .nav-item:hover {
@@ -87,8 +87,9 @@ h1 {
   transform-style: preserve-3d;
 }
 
- .card:hover {
-  box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 48px; 
+.card:hover {
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px,
+    rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 48px;
 }
 
 .category-view.play-mode .card:hover {
@@ -103,7 +104,8 @@ h1 {
   display: grid;
 }
 
-.front-side, .back-side {
+.front-side,
+.back-side {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -119,7 +121,7 @@ h1 {
 }
 
 .back-side .flip-div {
-height: 30px;
+  height: 30px;
 }
 
 .card-img {
@@ -175,11 +177,11 @@ height: 30px;
   display: none;
 }
 
-.game-on  .repeat-button {
+.game-on .repeat-button {
   display: inline-block !important;
 }
 
-.game-on  .start-button {
+.game-on .start-button {
   display: none !important;
 }
 
@@ -195,11 +197,11 @@ height: 30px;
   transition: transform 0.6s;
   position: fixed;
   left: 50%;
-  bottom: -10%;
+  bottom: -65px;
   transform: translate(-50%, 100%);
 }
 
-.category-view.play-mode  #game-buttons {
+.category-view.play-mode #game-buttons {
   transform: translate(-50%, -80%);
 }
 
@@ -219,7 +221,7 @@ height: 30px;
   border-bottom-right-radius: 0 !important;
   width: 150px !important;
   height: 70px !important;
- }
+}
 
 #game-buttons span {
   vertical-align: middle;
@@ -263,25 +265,48 @@ height: 30px;
   overflow-x: auto;
 }
 
- #statistics tbody {
+#statistics tbody {
   display: table;
   width: 100%;
   vertical-align: middle;
- }
+}
 
 .asc::after {
   content: " 🔺";
- }
+}
 
- .desc::after {
+.desc::after {
   content: " 🔻";
- }
+}
 
- #statistics th {
+#statistics th {
   background-color: var(--bs-gray);
   color: var(--bs-white);
   cursor: pointer;
- }
+}
+
+@media (min-height: 800px) and (min-width: 992px) {
+  .category-view.play-mode #game-buttons {
+    position: relative;
+    transform: translate(-50%, 0%);
+  }
+
+  .category-view.play-mode #game-buttons:hover {
+    transform: translate(-50%, -10%);
+  }
+
+  .repeat-button,
+  .start-button {
+    font-size: 35px;
+    border-radius: 30px !important;
+    width: 200px !important;
+    height: 90px !important;
+  }
+
+  #game-buttons .material-symbols-outlined {
+    font-size: 50px;
+  }
+}
 
 @media (max-width: 484px) {
   #header-container {
@@ -294,4 +319,3 @@ height: 30px;
     width: 100%;
   }
 }
-
