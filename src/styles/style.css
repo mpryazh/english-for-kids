@@ -3,12 +3,11 @@ body * {
 }
 
 body {
-  background-color: var(--bs-light) !important;
   min-height: 100vh;
 }
 
-main {
-  background-color: var(--bs-light);
+header, body, main, #stars-container {
+  background-color: var(--bs-light) !important;
 }
 
 h1 {
@@ -22,8 +21,8 @@ h1 {
 }
 
 #stars-container {
-  padding: 10px 20px;
-  height: 60px;
+  padding: 0 20px;
+  height: 50px;
   background-color: var(--bs-light);
   display: flex;
   justify-content: flex-end;
@@ -71,7 +70,7 @@ h1 {
 }
 
 .offcanvas {
-  max-width: 300px !important;
+  max-width: 400px !important;
 }
 
 .col {
@@ -298,7 +297,7 @@ h1 {
   .repeat-button,
   .start-button {
     font-size: 35px;
-    border-radius: 30px !important;
+    border-radius: 50px !important;
     width: 200px !important;
     height: 90px !important;
   }
@@ -317,5 +316,32 @@ h1 {
   h1 {
     order: 1;
     width: 100%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .card {
+    height: 235px !important;
+  }
+  .card h5 {
+    font-size: 26px;
+  }
+
+  .card .flip-button {
+    height: 35px;
+    width: 35px;
+  }
+
+  #stats-table {
+    font-size: 18px;
+  }
+}
+
+@media (min-width: 1400px) {
+  .card {
+    height: 245px !important;
+  }
+  .card h5 {
+    font-size: 28px;
   }
 }

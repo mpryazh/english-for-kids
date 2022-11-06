@@ -37,14 +37,14 @@
 
 .layer {
   width: 100%;
-  border: 2px solid var(--bs-primary);
+  border: 2px solid var(--bs-gray-500);
   transition: 0.3s ease all;
   z-index: 1;
 }
 
 .layer::after {
   content: "TRAIN";
-  color: var(--bs-primary);
+  color: var(--bs-dark);
   font-size: large;
   position: absolute;
   top: 6px;
@@ -55,24 +55,24 @@
   content: "";
   position: absolute;
   top: 5px;
-  left: 4px;
+  left: 5px;
   width: 30px;
   height: 30px;
   padding: 9px 4px;
-  background-color: var(--bs-yellow);
+  background-color: var(--bs-pink);
   border-radius: 50%;
   transition: 0.3s cubic-bezier(0.18, 0.89, 0.35, 1.15) all;
 }
 
 #play-train-btn .checkbox:checked + .knobs:before {
   content: "";
-  left: 86px;
+  left: 85px;
   background-color: var(--bs-primary);
 }
 
 #play-train-btn .checkbox:checked ~ .layer::after {
   content: "PLAY";
-  left: -25px;
+  left: -20px;
 }
 
 #play-train-btn .knobs,
@@ -81,61 +81,66 @@
   transition: 0.3s ease all;
 }
 
-@media (min-width: 992px) {
+@media (min-width: 1200px) {
   .button {
-    width: 170px;
-    height: 65px;
+    width: 150px;
+    height: 50px;
   }
 
   .layer {
-    border: 3px solid var(--bs-primary);
+    border-width: 3px;
   }
 
   .layer::after {
-    left: 65px;
-    top: 11px;
-    font-size: 28px;
+    left: 50px;
+    top: 6px;
+    font-size: 25px;
   }
 
   #play-train-btn .checkbox:checked ~ .layer::after {
-    left: -30px;
+    left: -20px;
   }
 
   #play-train-btn .knobs:before {
-    width: 55px;
-    height: 55px;
+    width: 40px;
+    height: 40px;
     top: 5px;
   }
 
   #play-train-btn .checkbox:checked + .knobs:before {
-    left: 111px;
+    left: 104px;
   }
 }
 
 @media (max-width: 484px) {
   .button {
-    width: 80px;
-    height: 31px;
-    left: 3px;
+    width: 90px;
+    height: 33px;
+    left: 2px;
+  }
+
+  .layer {
+    border-width: 2px;
   }
 
   .layer::after {
-    left: 29px;
+    left: 33px;
     top: 4px;
     font-size: 14px;
   }
 
   #play-train-btn .checkbox:checked ~ .layer::after {
-    left: -8px;
+    left: -10px;
   }
 
   #play-train-btn .knobs:before {
     width: 25px;
     height: 25px;
-    top: 3px;
+    top: 4px;
+    left: 4px;
   }
 
   #play-train-btn .checkbox:checked + .knobs:before {
-    left: 51px;
+    left: 61px;
   }
 }
