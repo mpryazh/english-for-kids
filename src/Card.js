@@ -3,6 +3,7 @@ import { state } from "./index.js";
 import { incrementClicks } from "./statistics";
 
 class Card {
+  card;
   constructor(cat_id, id) {
     this.id = id;
     this.category_id = cat_id;
@@ -59,8 +60,8 @@ class Card {
     }
   }
 
-  playAudio() {
-    this.card.querySelector("audio").play();
+  async playAudio() {
+    await this.card.querySelector("audio").play();
   }
 
   getWordData() {

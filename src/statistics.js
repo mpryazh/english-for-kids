@@ -20,8 +20,7 @@ function createStats() {
 }
 
 function getStats(key) {
-  const stats = JSON.parse(localStorage.getItem(key)) || new Stats(key);
-  return stats;
+  return JSON.parse(localStorage.getItem(key)) || new Stats(key);
 }
 
 function updateStats() {

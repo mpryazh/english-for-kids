@@ -10,6 +10,7 @@ import {
 } from "./navigation.js";
 
 class Category {
+  card;
   constructor(id, difficultCategory = false) {
     this.id = id;
     this.startGame = startGame.bind(this);

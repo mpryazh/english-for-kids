@@ -163,16 +163,16 @@ function stopGameState() {
   state.gameOn = false;
 }
 
-function successSound() {
-  new Audio("./data/audio/correct.mp3").play();
+async function successSound() {
+  await new Audio("./data/audio/correct.mp3").play();
 }
 
-function failureSound() {
-  new Audio("./data/audio/error.mp3").play();
+async function failureSound() {
+  await new Audio("./data/audio/error.mp3").play();
 }
 
-function playSound(sound) {
-  new Audio(sound).play();
+async function playSound(sound) {
+  await new Audio(sound).play();
 }
 
 function shuffle(array) {

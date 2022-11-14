@@ -1,4 +1,4 @@
-import { state } from "./index.js";;
+import { state } from "./index.js";
 
 function addModeSwitchBtn() {
   let switchBtn = document.querySelector("#play-train-btn .checkbox");
